@@ -2,8 +2,13 @@ const express = require('express');
 const http = require('http');
 const fs = require('fs');
 const path = require('path');
+const bodyParser = require("body-parser");
+const { default: axios } = require('axios');
+
 
 var app = express();
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.get('/:id/:id2', function(req, res) {
     var id = req.params.id;
@@ -41,6 +46,24 @@ app.get('/', function(req, res) {
 app.use((req, res, next) => {
     res.status(404);
     res.redirect('https://minipractice.net')
+})
+
+app.post('/upload', function(req, res) {
+    var image = req.body.image;
+    let bodyfetch = new FormData()
+    bodyfetch.set('key', 'fc3b6f137cc0b412de8feddaee643ea0')
+    bodyfetch.append('image', image)
+    axios({
+        method: 'post',
+        url: 'https://api.imgbb.com/1/upload',
+        data: bodyfetch
+    }).then(function(response) {
+        var baseurl = response.data.data.display_url;
+        var url = baseurl.replace('https://i.ibb.co/', '');
+        url = "https://img.minipractice.net/" + url;
+        res.status(200);
+        res.redirect(url);
+    })
 })
 
 app.listen(5000, function() {
