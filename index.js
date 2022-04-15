@@ -32,6 +32,17 @@ app.get('/:id/:id2', function(req, res) {
     `)
 })
 
+//redirect '/' to https://minipractice.net
+
+app.get('/', function(req, res) {
+    res.redirect('https://minipractice.net');
+})
+
+app.use((req, res, next) => {
+    res.status(404);
+    res.redirect('https://minipractice.net')
+})
+
 app.listen(5000, function() {
     console.log('listening on 5000');
 })
