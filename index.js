@@ -58,6 +58,7 @@ app.get('/', function(req, res) {
 // })
 
 app.post('/upload', function(req, res) {
+    let hosturl = req.protocol + "://" + req.headers.host + "/";
     //check if file is present in the request
     let image = req.files.file.data.toString('base64');
     // let bodyfetch = new FormData()
@@ -80,7 +81,7 @@ app.post('/upload', function(req, res) {
         if (err) return console.log(err);
         let baseurl = JSON.parse(body).data.display_url;
         let url = baseurl.replace('https://i.ibb.co/', '');
-        url = "https://img.minipractice.net/" + url;
+        url = hosturl + url;
         res.status(200);
         res.redirect(url);
 
